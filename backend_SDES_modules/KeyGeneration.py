@@ -27,7 +27,7 @@ class KeyGeneration:
         list_of_bits = KeyGeneration.getListOfBits(bits)
         print(f"new bits {list_of_bits}")
         #now we have the list of bits, randomize them with themselves
-
+        print(f"shuffled bits: {random.shuffle(list_of_bits)}")
 
 
         return randomized_bits
