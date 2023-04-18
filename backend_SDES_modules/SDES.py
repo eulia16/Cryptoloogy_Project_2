@@ -1,6 +1,8 @@
 """
 A simplified data encryption standard block cipher cryptographic algorithm
 """
+from sage import *
+
 
 FIXED_IP = [2, 6, 3, 1, 4, 8, 5, 7]
 FIXED_EP = [4, 1, 2, 3, 2, 3, 4, 1]
