@@ -28,11 +28,8 @@ def affine_encrypt(text, key):
 
 
 # affine cipher decryption function
-# returns original text
+# returns original text,  P = (a^-1 * (C - b)) % 26
 def affine_decrypt(cipher, key):
-    '''
-    P = (a^-1 * (C - b)) % 26
-    '''
     return ''.join([chr(((modinv(key[0], 26) * (ord(c) - ord('A') - key[1]))
                          % 26) + ord('A')) for c in cipher])
 
@@ -55,5 +52,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-# This code is contributed by
-# Bhushan Borole

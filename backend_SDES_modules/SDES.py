@@ -22,27 +22,29 @@ S1 = [[0, 1, 2, 3],
 KEY = '0111111101'
 
 
+#permute
 def permutate(original, fixed_key):
     new = ''
     for i in fixed_key:
         new += original[i - 1]
     return new
 
-
+#the returns the left half of the bits(either 4 or 5)
 def left_half(bits):
     return bits[:int(len(bits)/2)]
 
-
+#the returns the right half of the bits(either 4 or 5)
 def right_half(bits):
     return bits[int(len(bits)/2):]
 
 
+#shifts the bits
 def shift(bits):
     rotated_left_half = left_half(bits)[1:] + left_half(bits)[0]
     rotated_right_half = right_half(bits)[1:] + right_half(bits)[0]
     return rotated_left_half + rotated_right_half
 
-
+#abstraction
 def key1():
     return permutate(shift(permutate(KEY, FIXED_P10)), FIXED_P8)
 
@@ -91,14 +93,16 @@ def decrypt(cipher_text):
 
 if __name__ == "__main__":
 
+    #Example encryption and decryption of an 8 bit binary string
     encrypt('11101010')
     decrypt('10100010')
 
 
+#issues with all this code
 '''
 #!/usr/bin/env sage -python
 from mpmath.libmp import sage
-from sage import Crypto
+from sage.all import Crypto
 '''
 
 '''
