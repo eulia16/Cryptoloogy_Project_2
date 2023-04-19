@@ -24,68 +24,87 @@ S1 = [[0, 1, 2, 3],
 KEY = '0111111101'
 
 
-#permute
+#This function takes an original string and applies a permutation
+#specified by the fixed_key list. It returns the resulting string.
 def permutate(original, fixed_key):
     new = ''
     for i in fixed_key:
         new += original[i - 1]
     return new
 
-#the returns the left half of the bits(either 4 or 5)
+#This function takes a string of bits and returns the left half of
+#the bits (either 4 or 5, depending on the input).
 def left_half(bits):
     return bits[:int(len(bits)/2)]
 
-#the returns the right half of the bits(either 4 or 5)
+# This function takes a string of bits and returns the right half
+#of the bits (either 4 or 5, depending on the input).
 def right_half(bits):
     return bits[int(len(bits)/2):]
 
 
-#shifts the bits
+#This function takes a string of bits and performs a circular shift
+#on the bits. It returns the resulting string.
 def shift(bits):
     rotated_left_half = left_half(bits)[1:] + left_half(bits)[0]
     rotated_right_half = right_half(bits)[1:] + right_half(bits)[0]
     return rotated_left_half + rotated_right_half
 
-#abstraction
+#generates first key
 def key1():
     return permutate(shift(permutate(KEY, FIXED_P10)), FIXED_P8)
 
-
+#generates second key
 def key2():
     return permutate(shift(shift(shift(permutate(KEY, FIXED_P10)))), FIXED_P8)
 
-
+#simple XOR
 def xor(bits, key):
     new = ''
     for bit, key_bit in zip(bits, key):
         new += str(((int(bit) + int(key_bit)) % 2))
     return new
 
-
+#This function looks up a value in a specified S-box (substitution box) using the first two and
+#last two bits of the input string bits. It returns the resulting value as a binary string.
 def lookup_in_sbox(bits, sbox):
     row = int(bits[0] + bits[3], 2)
     col = int(bits[1] + bits[2], 2)
     return '{0:02b}'.format(sbox[row][col])
 
-
+#This function takes a string of bits and a subkey key and performs the main
+#encryption function of the DES algorithm. It returns the resulting encrypted string.
 def f_k(bits, key):
     L = left_half(bits)
+
     R = right_half(bits)
+
     bits = permutate(R, FIXED_EP)
+
     bits = xor(bits, key)
+
     bits = lookup_in_sbox(left_half(bits), S0) + lookup_in_sbox(right_half(bits), S1)
+
     bits = permutate(bits, FIXED_P4)
+
     return xor(bits, L)
 
-
+#This function takes an 8-bit binary string plain_text and performs
+#the DES encryption algorithm on it. It prints the resulting encrypted string.
 def encrypt(plain_text):
     bits = permutate(plain_text, FIXED_IP)
+
     temp = f_k(bits, key1())
+
     bits = right_half(bits) + temp
+
+
     bits = f_k(bits, key2())
+
     print(permutate(bits + temp, FIXED_IP_INVERSE))
 
-
+#This function takes an 8-bit binary string cipher_text and performs
+#the DES decryption algorithm on it. It prints the resulting decrypted string.
 def decrypt(cipher_text):
     bits = permutate(cipher_text, FIXED_IP)
     temp = f_k(bits, key2())
@@ -94,9 +113,9 @@ def decrypt(cipher_text):
     print (permutate(bits + temp, FIXED_IP_INVERSE))
 
 if __name__ == "__main__":
-
     #Example encryption and decryption of an 8 bit binary string
     encrypt('11101010')
+
     decrypt('10100010')
 
 

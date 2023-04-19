@@ -1,4 +1,5 @@
 # eg: modinv(7, 26) = 15
+#ectendede euclidean algorithm
 def egcd(a, b):
     x, y, u, v = 0, 1, 1, 0
     while a != 0:
@@ -8,7 +9,7 @@ def egcd(a, b):
     gcd = b
     return gcd, x, y
 
-
+#calculates the modular inverse given the extended euclidean algorithm
 def modinv(a, m):
     gcd, x, y = egcd(a, m)
     if gcd != 1:
@@ -17,8 +18,7 @@ def modinv(a, m):
         return x % m
 
 
-# affine cipher encryption function
-# returns the cipher text
+#encrypts the text using affine
 def affine_encrypt(text, key):
     '''
     C = (a*P + b) % 26
@@ -27,14 +27,12 @@ def affine_encrypt(text, key):
                         + ord('A')) for t in text.upper().replace(' ', '')])
 
 
-# affine cipher decryption function
-# returns original text,  P = (a^-1 * (C - b)) % 26
+# decrypts the text
 def affine_decrypt(cipher, key):
     return ''.join([chr(((modinv(key[0], 26) * (ord(c) - ord('A') - key[1]))
                          % 26) + ord('A')) for c in cipher])
 
 
-# Driver Code to test the above functions
 def main():
     # declaring text and key
     text = 'AFFINE CIPHER'
