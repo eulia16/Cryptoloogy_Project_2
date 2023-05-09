@@ -35,8 +35,8 @@ def affine_decrypt(cipher, key):
 
 def main():
     # declaring text and key
-    text = 'AFFINE CIPHER'
-    key = [17, 20]
+    text = 'hello'
+    key = [3, 4]
 
     # calling encryption function
     affine_encrypted_text = affine_encrypt(text, key)

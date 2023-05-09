@@ -4,7 +4,7 @@ import sys
 
 #import Affine
 #import SDES
-
+from backend_SDES_modules import Vigenere
 from PyQt6.uic.properties import QtGui, QtWidgets
 
 
@@ -528,6 +528,7 @@ class vcWindow(QWidget):
         self.plainText = QLineEdit(self)
         self.plainText.setPlaceholderText("(e.g., Meet at the Bookstore)")
         self.plainText.setStyleSheet("border: 1px solid black;")
+        self.btn1.clicked.connect(self.textToEncrypt)
 
         self.keyLbl = QLabel(self)
         self.keyLbl.setText("Enter your key: ")
@@ -633,6 +634,8 @@ class vcWindow(QWidget):
         self.encText.clear()
         self.decText.clear()
         self.plainText.setFocus()
+
+
 
 
 app = QApplication(sys.argv)
