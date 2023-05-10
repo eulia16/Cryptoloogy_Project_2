@@ -712,7 +712,7 @@ class vcWindow(QWidget):
             "the figure. To decrypt the ciphertext, you have "
             "to know the key that was used, and work backwards through the encryption procedure. "
             "The concept behind the Vigenère cipher is to hide the plaintext letter frequencies "
-            "to increases the security of your message.
+            "to increases the security of your message."
             "\n\n          The mathematical procedure behind the encryption and decryption is the following: "
             "\nC[i] = (M[i] + K[i mod m]) mod L \nM[i] = (C[i] - K[i mod m]) mod L \n"
             "where C[i] represents the i-th letter in the ciphered text, M[i] is the i-th letter "
