@@ -2,10 +2,11 @@ from PyQt6.QtGui import QFont, QPixmap, QImage
 from PyQt6.QtWidgets import *
 import sys
 
-#import Affine
-#import SDES
-from backend_SDES_modules import Vigenere
 from PyQt6.uic.properties import QtGui, QtWidgets
+
+import Affine
+from SDES import SDES
+import Vigenere
 
 
 class MainWindow(QWidget):
@@ -20,7 +21,6 @@ class MainWindow(QWidget):
         self.logo = QPixmap('../csc 332/coverImg.jpeg')
         self.logo.width()
         picLabel.setScaledContents(True)
-        # picLabel.resize(300, 300)
         picLabel.setPixmap(self.logo)
 
         self.label1 = QLabel("Learning Cryptography Through Programming in Python")
@@ -47,7 +47,7 @@ class MainWindow(QWidget):
         self.button3.clicked.connect(self.show_sDes_window)
 
         self.button4 = QPushButton()
-        self.button4.setText("Advanced Encryption Standard (AES)")
+        self.button4.setText("The Advanced Encryption Standard (AES)")
         self.button4.setFont(QFont('Arial', 17))
         self.button4.setStyleSheet('QPushButton {background-color: darkBlue; color: white;}')
         self.button4.clicked.connect(self.show_aes_window)
@@ -58,7 +58,7 @@ class MainWindow(QWidget):
         self.button5.setStyleSheet('QPushButton {background-color: darkBlue; color: white;}')
         self.button5.clicked.connect(self.show_vc_window)
 
-        self.label2 = QLabel("Click one to analyze & implement each symmetric encryption system!")
+        self.label2 = QLabel("Click to analyze & implement each symmetric encryption system!")
         self.label2.setFont(QFont('Times', 25))
 
         # create layouts and add widgets
@@ -67,7 +67,7 @@ class MainWindow(QWidget):
         hbox.addWidget(self.button2)
 
         hbox2 = QHBoxLayout()
-        hbox2.addWidget(self.button4)
+        hbox2.addWidget(self.button3)
         hbox2.addWidget(self.button5)
 
         layout = QVBoxLayout()
@@ -75,7 +75,7 @@ class MainWindow(QWidget):
         layout.addWidget(self.label1)
         layout.addLayout(hbox)
         layout.addLayout(hbox2)
-        layout.addWidget(self.button3)
+        layout.addWidget(self.button4)
         layout.addWidget(self.label2)
         self.setLayout(layout)
 
@@ -279,7 +279,7 @@ class acWindow(QWidget):
         self.btn2.setText("Decrypt")
         self.btn2.setFont(QFont('Arial', 17))
         self.btn2.setStyleSheet('QPushButton {background-color: darkBlue; color: white;}')
-        # self.button2.clicked.connect(self.decrypted_text)
+        self.btn2.clicked.connect(self.decrypted_text)
 
         self.btn3 = QPushButton()
         self.btn3.setText("Click to Clear and Try again!")
@@ -325,12 +325,16 @@ class acWindow(QWidget):
     def encrypted_text(self):
         text = self.plainText.text()
         key = [self.aCoef.text(), self.bCoef.text()]
-        # print(text, key)
+        #print(text, key)
 
-        #self.encText.setText(Affine.affine_encrypt(text, key))
+        self.encText.setText(Affine.affine_encrypt(text, key))
 
     def decrypted_text(self):
-        print(" ")
+        encryptedValue = self.encText.text()
+        key = [self.aCoef.text(), self.bCoef.text()]
+        #print(encryptedValue, key)
+
+        self.decText.setText(Affine.affine_decrypt(encryptedValue, key))
 
     def clear(self):
         self.plainText.clear()
@@ -381,26 +385,27 @@ class SdesWindow(QWidget):
         self.descBox1.setFont(QFont('Times', 20))
         self.descBox1.setStyleSheet("border: 5px solid white")
         self.descBox1.setReadOnly(True)
-        self.descBox1.setPlainText("         S-DES is a model cipher intended for learning. The encryption algorithm takes an "
-                                   "8-bit block of plaintext and a 10-bit key as input and produces an 8-bit block of "
-                                   "ciphertext. It's a comprehensible version of the full Data Encryption "
-                                   "Standard (DES) algorithm, which uses a key size of 56 bits and "
-                                   "operates on 64-bit blocks of plaintext. It has the same structures as DES and "
-                                   "uses the same notations. DES was developed by IBM with help from the NSA and "
-                                   "was one of the most used encryption systems in the world. In S-DES there's a "
-                                   "function that's applied twice, whereas in DES, that function is repeated 16 "
-                                   "times.  \n\n "
-                                   "        Since S-DES is a symmetric cipher, it relies on the use of a 10-bit key shared "
-                                   "between the sender and receiver. Two 8-bit subkeys are produced in the key "
-                                   "generation for use in separate stages of the encryption and decryption algorithm. "
-                                   "The key is first put through a fixed permutation table (P10). Then a "
-                                   "shift operation is performed. The P8 operation permutes the 10-bit input"
-                                   "key after a function performs a and produces a 8-bit block, known as the subkeys "
-                                   "K1 and K2. The cipher involves five functions: an initial permutation (IP); a "
-                                   "compounded function labeled fk, which involves both permutation and substitution "
-                                   "operations on a string of bits and a subkey; another permutation function that "
-                                   "divides the output key into two halves; the fk function again; and a final "
-                                   "permutation function that is the inverse of the initial permutation.")
+        self.descBox1.setPlainText(
+            "         S-DES is a model cipher intended for learning. The encryption algorithm takes an "
+            "8-bit block of plaintext and a 10-bit key as input and produces an 8-bit block of "
+            "ciphertext. It's a comprehensible version of the full Data Encryption "
+            "Standard (DES) algorithm, which uses a key size of 56 bits and "
+            "operates on 64-bit blocks of plaintext. It has the same structures as DES and "
+            "uses the same notations. DES was developed by IBM with help from the NSA and "
+            "was one of the most used encryption systems in the world. In S-DES there's a "
+            "function that's applied twice, whereas in DES, that function is repeated 16 "
+            "times.  \n\n "
+            "        Being that S-DES is a symmetric cipher, it relies on the use of a 10-bit key shared "
+            "between the sender and receiver. Two 8-bit subkeys are produced in the key "
+            "generation for use in separate stages of the encryption and decryption algorithm. "
+            "The key is first put through a fixed permutation table (P10). Then a "
+            "shift operation is performed. The P8 operation permutes the 10-bit input"
+            "key after a function performs a and produces a 8-bit block, known as the subkeys "
+            "K1 and K2. The cipher involves five functions: an initial permutation (IP); a "
+            "compounded function labeled fk, which involves both permutation and substitution "
+            "operations on a string of bits and a subkey; another permutation function that "
+            "divides the output key into two halves; the fk function again; and a final "
+            "permutation function that is the inverse of the initial permutation.")
 
         self.descBox2 = QPlainTextEdit(self)
         self.descBox2.setFixedSize(500, 300)
@@ -421,7 +426,7 @@ class SdesWindow(QWidget):
             "\n        7. Now just apply two round shifts circulate on each half of the bits. Changes the position of two "
             "bits of each halves. "
             "\n        8. Now put the bits into the P8 function and retain your second subkey K2 "
-            )
+        )
 
         picLabel = QLabel(self)
         self.sdes_img = QPixmap('../csc 332/sdes.png')
@@ -435,12 +440,13 @@ class SdesWindow(QWidget):
         self.btn1.setText("Encrypt")
         self.btn1.setFont(QFont('Arial', 17))
         self.btn1.setStyleSheet('QPushButton {background-color: darkBlue; color: white;}')
-        # self.btn1.clicked.connect(self.encrypted_text())
+        self.btn1.clicked.connect(self.encryptedText)
 
         self.btn2 = QPushButton(self)
         self.btn2.setText("Decrypt")
         self.btn2.setFont(QFont('Arial', 17))
         self.btn2.setStyleSheet('QPushButton {background-color: darkBlue; color: white;}')
+        self.btn2.clicked.connect(self.decryptedText)
 
         self.encLabel = QLabel(self)
         self.encLabel.setText("Encrypted text: ")
@@ -453,6 +459,12 @@ class SdesWindow(QWidget):
         self.decText = QLineEdit(self)
         self.decText.setStyleSheet("border: 3px solid darkBlue;")
         self.decText.setReadOnly(True)
+
+        self.btn3 = QPushButton()
+        self.btn3.setText("Click to Clear and Try again!")
+        self.btn3.setFont(QFont('Arial', 17))
+        self.btn3.setStyleSheet('QPushButton {background-color: darkBlue; color: white;}')
+        self.btn3.clicked.connect(self.clear)
 
         hbox1 = QHBoxLayout()
         hbox1.addWidget(self.plainTextLabel)
@@ -476,15 +488,35 @@ class SdesWindow(QWidget):
         hbox4.addWidget(self.descBox2)
         hbox4.addWidget(picLabel)
 
-
         layout = QVBoxLayout()
         layout.addWidget(self.label1)
         layout.addLayout(hbox1)
         layout.addLayout(hbox2)
         layout.addLayout(hbox3)
+        layout.addWidget(self.btn3)
         layout.addWidget(self.descBox1)
         layout.addLayout(hbox4)
         self.setLayout(layout)
+
+    def encryptedText(self):
+        key = self.key.text()
+        sdes = SDES(key)
+        text = self.plainText.text()
+        self.encText.setText(sdes.encrypt(text))
+
+    def decryptedText(self):
+        key = self.key.text()
+        sdes = SDES(key)
+        text = self.encText.text()
+        self.decText.setText(sdes.decrypt(text))
+
+    def clear(self):
+        self.plainText.clear()
+        self.key.clear()
+        self.cipherTxt.clear()
+        self.encText.clear()
+        self.decText.clear()
+        self.plainText.setFocus()
 
 
 class aesWindow(QWidget):
@@ -494,18 +526,143 @@ class aesWindow(QWidget):
 
     def aes_popUp(self):
         self.setWindowTitle("AES")
-        self.resize(800, 600)
+        self.setFixedSize(1050, 750)
         self.setStyleSheet("background-color: beige; color: black")
 
-        self.lbl1 = QLabel("Aes Encryption System")
+        self.lbl1 = QLabel("The Advanced Encryption Standard (AES)")
         self.lbl1.setFont(QFont('Times', 30))
         self.lbl1.setStyleSheet("font-weight: bold")
         self.lbl1.setFixedWidth(700)
         self.lbl1.setFixedHeight(30)
 
+        self.lbl2 = QLabel("AES Encryption")
+        self.lbl2.setFont(QFont('Times', 23))
+        self.lbl2.setStyleSheet("font-weight: bold")
+
+        self.plainTextLabel = QLabel(self)
+        self.plainTextLabel.setText("Enter plain text to be encrypted: ")
+        self.plainText = QLineEdit(self)
+        self.plainText.setPlaceholderText("Enter message ")
+        self.plainText.setStyleSheet("border: 1px solid black")
+
+        self.btn1 = QPushButton(self)
+        self.btn1.setText("Encrypt")
+        self.btn1.setFont(QFont('Arial', 17))
+        self.btn1.setStyleSheet('QPushButton {background-color: darkBlue; color: white;}')
+        #self.btn1.clicked.connect(self.encryptedText)
+
+
+        self.encLabel = QLabel(self)
+        self.encLabel.setText("Encrypted text: ")
+        self.encText = QLineEdit(self)
+        self.encText.setStyleSheet("border: 3px solid darkBlue;")
+        self.encText.setReadOnly(True)
+
+        self.keyLabel = QLabel(self)
+        self.keyLabel.setText("Enter 128-bit secret key: ")
+        self.key = QLineEdit(self)
+        self.key.setPlaceholderText("Enter key")
+        self.key.setStyleSheet("border: 1px solid black")
+
+        self.lbl3 = QLabel("AES Decryption")
+        self.lbl3.setFont(QFont('Times', 23))
+        self.lbl3.setStyleSheet("font-weight: bold")
+
+        self.messageLbl = QLabel(self)
+        self.messageLbl.setText("Enter text to be decrypted: ")
+        self.message = QLineEdit(self)
+        self.message.setPlaceholderText("Enter message")
+        self.message.setStyleSheet("border: 1px solid black")
+
+        self.decKeyLabel = QLabel(self)
+        self.decKeyLabel.setText("Enter 128-bit secret key: ")
+        self.decKey = QLineEdit(self)
+        self.decKey.setPlaceholderText("Enter key")
+        self.decKey.setStyleSheet("border: 1px solid black")
+
+        self.btn2 = QPushButton(self)
+        self.btn2.setText("Decrypt")
+        self.btn2.setFont(QFont('Arial', 17))
+        self.btn2.setStyleSheet('QPushButton {background-color: darkBlue; color: white;}')
+        #self.btn2.clicked.connect(self.decryptedText)
+
+        self.decLabel = QLabel(self)
+        self.decLabel.setText("Decrypted text: ")
+        self.decText = QLineEdit(self)
+        self.decText.setStyleSheet("border: 3px solid darkBlue;")
+        self.decText.setReadOnly(True)
+
+        self.descBox1 = QPlainTextEdit(self)
+        self.descBox1.setFont(QFont('Times', 20))
+        self.descBox1.setStyleSheet("border: 5px solid white")
+        self.descBox1.setReadOnly(True)
+        self.descBox1.setPlainText("Description")
+
+        self.descBox2 = QPlainTextEdit(self)
+        self.descBox2.setFont(QFont('Times', 20))
+        self.descBox2.setStyleSheet("border: 5px solid white")
+        self.descBox2.setReadOnly(True)
+        self.descBox2.setPlainText("Description 2")
+
+        self.btn3 = QPushButton()
+        self.btn3.setText("Click to Clear and Try again!")
+        self.btn3.setFont(QFont('Arial', 17))
+        self.btn3.setStyleSheet('QPushButton {background-color: darkBlue; color: white;}')
+        self.btn3.clicked.connect(self.clear)
+
+        self.btn4 = QPushButton()
+        self.btn4.setText("Click to Clear and Try again!")
+        self.btn4.setFont(QFont('Arial', 17))
+        self.btn4.setStyleSheet('QPushButton {background-color: darkBlue; color: white;}')
+        self.btn4.clicked.connect(self.clear2)
+
+        vbox1 = QVBoxLayout()
+        vbox1.addWidget(self.lbl2)
+        vbox1.addWidget(self.plainTextLabel)
+        vbox1.addWidget(self.plainText)
+        vbox1.addWidget(self.keyLabel)
+        vbox1.addWidget(self.key)
+        vbox1.addWidget(self.btn1)
+        vbox1.addWidget(self.encLabel)
+        vbox1.addWidget(self.encText)
+        vbox1.addWidget(self.btn3)
+
+        vbox2 = QVBoxLayout()
+        vbox2.addWidget(self.lbl3)
+        vbox2.addWidget(self.messageLbl)
+        vbox2.addWidget(self.message)
+        vbox2.addWidget(self.decKeyLabel)
+        vbox2.addWidget(self.decKey)
+        vbox2.addWidget(self.btn2)
+        vbox2.addWidget(self.decLabel)
+        vbox2.addWidget(self.decText)
+        vbox2.addWidget(self.btn4)
+
+        hbox1 = QHBoxLayout()
+        hbox1.addLayout(vbox1)
+        hbox1.addWidget(self.descBox1)
+
+        hbox2 = QHBoxLayout()
+        hbox2.addLayout(vbox2)
+        hbox2.addWidget(self.descBox2)
+
         layout = QVBoxLayout()
         layout.addWidget(self.lbl1)
+        layout.addLayout(hbox1)
+        layout.addLayout(hbox2)
         self.setLayout(layout)
+
+    def clear(self):
+        self.plainText.clear()
+        self.key.clear()
+        self.encText.clear()
+        self.plainText.setFocus()
+
+    def clear2(self):
+        self.message.clear()
+        self.decKey.clear()
+        self.decText.clear()
+        self.message.setFocus()
 
 
 class vcWindow(QWidget):
@@ -528,7 +685,6 @@ class vcWindow(QWidget):
         self.plainText = QLineEdit(self)
         self.plainText.setPlaceholderText("(e.g., Meet at the Bookstore)")
         self.plainText.setStyleSheet("border: 1px solid black;")
-        self.btn1.clicked.connect(self.textToEncrypt)
 
         self.keyLbl = QLabel(self)
         self.keyLbl.setText("Enter your key: ")
@@ -537,25 +693,26 @@ class vcWindow(QWidget):
         self.key.setStyleSheet("border: 1px solid black;")
 
         self.descBox = QPlainTextEdit(self)
-        #self.descBox.setFixedSize(500, 300)
+        # self.descBox.setFixedSize(500, 300)
         self.descBox.setFixedHeight(300)
         # self.descBox.setFixedWidth(700)
         self.descBox.setFont(QFont('Times', 20))
         self.descBox.setReadOnly(True)
         self.descBox.setStyleSheet("border: 5px solid white")
-        self.descBox.setPlainText("        Named after Blaise de Vigenère, a French cryptographer, the Vigenère cipher is an "
-                                  "expanded Caesar Cipher where a message is encrypted "
-                                  "using a series of different Caesar Ciphers, based on the letters of a specific "
-                                  "keyword. The length of the keyword determines the "
-                                  "number of different encryptions that are applied to the plaintext."
-                                  "\n\n          To encrypt, you use a table of alphabets, known as a Vigenère "
-                                  "table. It "
-                                  "consist of the alphabet written 26 times in different rows, with each alphabet "
-                                  "shifted periodically to the left compared to the one in the row above, as shown in "
-                                  "the figure. To decrypt the ciphertext, you have "
-                                  "to know the key that was used, and work backwards through the encryption procedure. "
-                                  "The concept behind the Vigenère cipher is to hide the plaintext letter frequencies "
-                                  "to increases the security of your message.")
+        self.descBox.setPlainText(
+            "        Named after Blaise de Vigenère, a French cryptographer, the Vigenère cipher is an "
+            "expanded Caesar Cipher where a message is encrypted "
+            "using a series of different Caesar Ciphers, based on the letters of a specific "
+            "keyword. The length of the keyword determines the "
+            "number of different encryptions that are applied to the plaintext."
+            "\n\n          To encrypt, you use a table of alphabets, known as a Vigenère "
+            "table. It "
+            "consist of the alphabet written 26 times in different rows, with each alphabet "
+            "shifted periodically to the left compared to the one in the row above, as shown in "
+            "the figure. To decrypt the ciphertext, you have "
+            "to know the key that was used, and work backwards through the encryption procedure. "
+            "The concept behind the Vigenère cipher is to hide the plaintext letter frequencies "
+            "to increases the security of your message.")
 
         picLabel = QLabel(self)
         self.vc_img = QPixmap('../csc 332/vc_img.jpeg')
@@ -565,12 +722,11 @@ class vcWindow(QWidget):
         picLabel.setFixedSize(425, 300)
         picLabel.setPixmap(self.vc_img)
 
-
         self.btn1 = QPushButton()
         self.btn1.setText("Encrypt")
         self.btn1.setFont(QFont('Arial', 17))
         self.btn1.setStyleSheet('QPushButton {background-color: darkBlue; color: white;}')
-        # self.button1.clicked.connect(self.encrypted_text)
+        self.btn1.clicked.connect(self.encrypted_text)
 
         self.encLabel = QLabel(self)
         self.encLabel.setText("Encoded Message: ")
@@ -582,7 +738,7 @@ class vcWindow(QWidget):
         self.btn2.setText("Decrypt")
         self.btn2.setFont(QFont('Arial', 17))
         self.btn2.setStyleSheet('QPushButton {background-color: darkBlue; color: white;}')
-        # self.button2.clicked.connect(self.decrypted_text)
+        self.btn2.clicked.connect(self.decrypted_text)
 
         self.btn3 = QPushButton()
         self.btn3.setText("Click to Clear and Try again!")
@@ -628,14 +784,23 @@ class vcWindow(QWidget):
         layout.addWidget(self.btn3)
         self.setLayout(layout)
 
+    def encrypted_text(self):
+        self.key1 = Vigenere.generateKey(self.plainText.text().upper(), self.key.text().upper())
+        #print(self.key1)
+
+        cipheredText = Vigenere.cipherText(self.plainText.text().upper(), self.key1.upper())
+        self.encText.setText(cipheredText)
+
+    def decrypted_text(self):
+        #key = Vigenere.generateKey(self.plainText.text(), self.key.text())
+        self.decText.setText(Vigenere.originalText(self.encText.text().upper(), self.key1.upper()))
+
     def clear(self):
         self.plainText.clear()
         self.key.clear()
         self.encText.clear()
         self.decText.clear()
         self.plainText.setFocus()
-
-
 
 
 app = QApplication(sys.argv)
