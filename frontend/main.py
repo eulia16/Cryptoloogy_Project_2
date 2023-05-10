@@ -700,9 +700,9 @@ class vcWindow(QWidget):
         self.descBox.setReadOnly(True)
         self.descBox.setStyleSheet("border: 5px solid white")
         self.descBox.setPlainText(
-            "        Named after Blaise de Vigenère, a French cryptographer, the Vigenère cipher is an "
-            "expanded Caesar Cipher where a message is encrypted "
-            "using a series of different Caesar Ciphers, based on the letters of a specific "
+            "          Named after Blaise de Vigenère, a French cryptographer, the Vigenère cipher is an "
+            "expanded Caesar Cipher. A message is encrypted "
+            "using a series of different Caesar Ciphers and based on the letters of a specific "
             "keyword. The length of the keyword determines the "
             "number of different encryptions that are applied to the plaintext."
             "\n\n          To encrypt, you use a table of alphabets, known as a Vigenère "
@@ -712,7 +712,15 @@ class vcWindow(QWidget):
             "the figure. To decrypt the ciphertext, you have "
             "to know the key that was used, and work backwards through the encryption procedure. "
             "The concept behind the Vigenère cipher is to hide the plaintext letter frequencies "
-            "to increases the security of your message.")
+            "to increases the security of your message.
+            "\n\n          The mathematical procedure behind the encryption and decryption is the following: "
+            "\nC[i] = (M[i] + K[i mod m]) mod L \nM[i] = (C[i] - K[i mod m]) mod L \n"
+            "where C[i] represents the i-th letter in the ciphered text, M[i] is the i-th letter "
+            "of your message, K[i mod m] denotes the i-th letter of your key K mod the keyword "
+            "length m, and L is the sum of the alphabet length. Similarly, for the decryption "
+            "procedure, M[i] is the i-th letter of your original message, C[i] is the i-th letter "
+            "of the ciphered text, and the rest of the notation is the same, this time you're "
+            "subtracting these values. ")
 
         picLabel = QLabel(self)
         self.vc_img = QPixmap('../csc 332/vc_img.jpeg')
